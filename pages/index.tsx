@@ -29,25 +29,6 @@ const Home: NextPage = () => {
     mutate();
   };
 
-  // const postConfig = () => {
-  //   fetch('http://localhost:3001/api/configuration', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       name: 'Newest decrisption',
-  //       description: 'Best one ever!',
-  //       color: 'red',
-  //     }),
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log(data);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
   return (
     <>
       <Head>
