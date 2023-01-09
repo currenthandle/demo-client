@@ -4,11 +4,34 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation } from 'react-query';
 import Configuration from '../components/Configuration';
+import { z } from 'zod';
+
+const configurationSchemaValidator = z.object({
+  id: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  name: z.string(),
+  description: z.string(),
+  color: z.string(),
+});
+
+const configurationsSchemaValidator = z.array(configurationSchemaValidator);
+
+type Configuration = z.infer<typeof configurationSchemaValidator>;
+type Configurations = z.infer<typeof configurationsSchemaValidator>;
 
 const Home: NextPage = () => {
-  const { isLoading, error, data } = useQuery('configurations', () =>
-    fetch('http://localhost:3001/api/configurations').then((res) => res.json())
+  const { data }: { data: Configurations | undefined } = useQuery(
+    'configurations',
+    () =>
+      fetch('http://localhost:3001/api/configurations').then((res) =>
+        res.json()
+      )
   );
+
+  if (data) {
+    configurationsSchemaValidator.parse(data);
+  }
 
   const { mutate, isLoading: isMutating } = useMutation(() => {
     return fetch('http://localhost:3001/api/configuration', {
@@ -24,7 +47,9 @@ const Home: NextPage = () => {
     });
   });
 
-  const postConfig = (e) => {
+  // assign react synthetic event type to e
+  const postConfig = (e: React.SyntheticEvent) => {
+    // prevent default behavior of submitting form
     e.preventDefault();
     mutate();
   };
