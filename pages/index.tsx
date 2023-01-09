@@ -101,11 +101,8 @@ const Home: NextPage = () => {
       </Head>
       <main className='flex min-h-screen flex-col items-center justify-center'>
         <h1>Hello I am the client</h1>
-        {/* display all configurations that came back from server */}
         {data &&
-          data?.map((config, i) => {
-            return <Configuration key={i} {...config} />;
-          })}
+          data?.map((config, i) => <Configuration key={i} {...config} />)}
 
         <button onClick={handlePostConfig}>Post Configuration</button>
         {/* deleteAll button */}
