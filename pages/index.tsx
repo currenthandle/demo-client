@@ -82,7 +82,7 @@ const Home: NextPage = () => {
     },
   });
 
-  const postConfig = (e: React.SyntheticEvent) => {
+  const handlePostConfig = (e: React.SyntheticEvent) => {
     e.preventDefault();
     addConfig.mutate();
   };
@@ -107,7 +107,7 @@ const Home: NextPage = () => {
             return <Configuration key={i} {...config} />;
           })}
 
-        <button onClick={postConfig}>Post Configuration</button>
+        <button onClick={handlePostConfig}>Post Configuration</button>
         {/* deleteAll button */}
         <button onClick={handleDeleteAll}>Delete All</button>
       </main>
