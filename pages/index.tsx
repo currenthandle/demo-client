@@ -74,7 +74,6 @@ const Home: NextPage = () => {
         ['configurations'],
         (oldData: Configurations | undefined): Configurations => {
           if (!oldData) {
-            console.log('no old data');
             return [data];
           }
           return [...oldData, data];
