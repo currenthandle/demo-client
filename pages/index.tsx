@@ -25,9 +25,9 @@ const Home: NextPage = () => {
   const { data }: { data: Configurations | undefined } = useQuery(
     'configurations',
     () =>
-      fetch('http://localhost:3001/api/configurations').then((res) =>
-        res.json()
-      )
+      fetch('http://localhost:3001/api/configurations')
+        .then((res) => res.json())
+        .catch((err) => err)
   );
 
   if (data) {
@@ -49,7 +49,7 @@ const Home: NextPage = () => {
       queryClient.setQueryData(['configurations'], []);
     },
     onError: (error) => {
-      console.log('error', error);
+      console.error('error', error);
     },
   });
 
