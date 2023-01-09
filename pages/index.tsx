@@ -65,7 +65,7 @@ const Home: NextPage = () => {
         }),
       })
         .then((res) => res.json())
-        .catch((err) => console.log(err));
+        .catch((err) => console.error(err));
     },
     onSuccess: (data) => {
       queryClient.setQueryData(
