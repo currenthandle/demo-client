@@ -1,7 +1,5 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import Configuration from '../components/Configuration';
 import { z } from 'zod';
