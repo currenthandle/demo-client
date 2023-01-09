@@ -53,7 +53,7 @@ const Home: NextPage = () => {
     },
   });
 
-  const mutation = useMutation({
+  const addConfig = useMutation({
     mutationFn: () => {
       return fetch('http://localhost:3001/api/configuration', {
         method: 'POST',
@@ -65,7 +65,9 @@ const Home: NextPage = () => {
           description: 'Best one ever!',
           color: 'red',
         }),
-      }).then((res) => res.json());
+      })
+        .then((res) => res.json())
+        .catch((err) => console.log(err));
     },
     onSuccess: (data) => {
       queryClient.setQueryData(
@@ -85,7 +87,7 @@ const Home: NextPage = () => {
   const postConfig = (e: React.SyntheticEvent) => {
     // prevent default behavior of submitting form
     e.preventDefault();
-    mutation.mutate();
+    addConfig.mutate();
   };
 
   const handleDeleteAll = (e: React.SyntheticEvent) => {
