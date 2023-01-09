@@ -2,7 +2,7 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import Configuration from '../components/Configuration';
 import { z } from 'zod';
 
@@ -21,6 +21,7 @@ type Configuration = z.infer<typeof configurationSchemaValidator>;
 type Configurations = z.infer<typeof configurationsSchemaValidator>;
 
 const Home: NextPage = () => {
+  const queryClient = useQueryClient();
   const { data }: { data: Configurations | undefined } = useQuery(
     'configurations',
     () =>
@@ -33,25 +34,63 @@ const Home: NextPage = () => {
     configurationsSchemaValidator.parse(data);
   }
 
-  const { mutate, isLoading: isMutating } = useMutation(() => {
-    return fetch('http://localhost:3001/api/configuration', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: 'Newest decrisption',
-        description: 'Best one ever!',
-        color: 'red',
-      }),
-    });
+  const deleteAll = useMutation({
+    mutationFn: () => {
+      return fetch('http://localhost:3001/api/configurations', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((res) => res.json())
+        .catch((err) => console.log(err));
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(['configurations'], []);
+    },
+    onError: (error) => {
+      console.log('error', error);
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: () => {
+      return fetch('http://localhost:3001/api/configuration', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: 'Newest decrisption',
+          description: 'Best one ever!',
+          color: 'red',
+        }),
+      }).then((res) => res.json());
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        ['configurations'],
+        (oldData: Configurations | undefined): Configurations => {
+          if (!oldData) {
+            console.log('no old data');
+            return [data];
+          }
+          return [...oldData, data];
+        }
+      );
+    },
   });
 
   // assign react synthetic event type to e
   const postConfig = (e: React.SyntheticEvent) => {
     // prevent default behavior of submitting form
     e.preventDefault();
-    mutate();
+    mutation.mutate();
+  };
+
+  const handleDeleteAll = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    deleteAll.mutate();
   };
 
   return (
@@ -70,6 +109,8 @@ const Home: NextPage = () => {
           })}
 
         <button onClick={postConfig}>Post Configuration</button>
+        {/* deleteAll button */}
+        <button onClick={handleDeleteAll}>Delete All</button>
       </main>
     </>
   );
