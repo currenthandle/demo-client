@@ -83,9 +83,7 @@ const Home: NextPage = () => {
     },
   });
 
-  // assign react synthetic event type to e
   const postConfig = (e: React.SyntheticEvent) => {
-    // prevent default behavior of submitting form
     e.preventDefault();
     addConfig.mutate();
   };
